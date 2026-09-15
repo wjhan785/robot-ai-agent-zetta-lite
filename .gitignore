@@ -1,0 +1,19 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+.venv/
+PLAN.md
+slurm/*
+
+# trajectory/candidate data is large and campaign-specific -- keep the dir, not the contents
+runs/*
+!runs/.gitkeep
+
+logs/*
+!logs/.gitkeep
+
+*.out
+*.err
+
+.DS_Store

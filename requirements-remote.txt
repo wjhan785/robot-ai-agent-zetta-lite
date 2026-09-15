@@ -1,0 +1,18 @@
+# Install AFTER requirements.txt, and ONLY inside conda env
+# on GPU workstation. These need the GPU box, or are just for
+# throughput plots -- neither is meaningful on the local Windows PC.
+#
+# Exact versions depend on CUDA 12.2 and whichever openpi/LIBERO commit you
+# install -- pin these once verified (PLAN.md §8 Weeks 1-2), don't trust the
+# unpinned names below for a real campaign.
+
+torch
+ray[default]
+matplotlib
+
+# LIBERO: follow https://github.com/Lifelong-Robot-Learning/LIBERO install
+# instructions (installs `libero`, `robosuite`, `mujoco`, etc.)
+
+# openpi client (talks to the pi05_libero policy server over websockets):
+# follow https://github.com/Physical-Intelligence/openpi install instructions
+# (installs the `openpi_client` package imported by policy/pi05_policy.py)

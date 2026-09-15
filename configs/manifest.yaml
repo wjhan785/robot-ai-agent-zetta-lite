@@ -1,0 +1,67 @@
+# Zetta-Lite campaign manifest -- frozen config for one evolution campaign
+# (PLAN.md §3 stage 0). Changing any value here should be treated as
+# starting a new campaign, not editing an existing one.
+
+campaign:
+  name: zetta-lite-v1
+  seed_note: "a 'seed' is the LIBERO init_state index; Pi0.5's own sampling noise is left as-is, not re-seeded"
+
+tasks:
+  - id: task_a
+    suite: libero_10
+    name: "TURN_ON_THE_STOVE_AND_PUT_THE_MOKA_POT_ON_IT"   # TODO: confirm exact task name string against your installed LIBERO's libero_10 suite
+    instruction: "turn on the stove and put the moka pot on it"
+    milestones: [stove_on, pot_grasped, pot_on_stove]        # ordered; tune thresholds once you can watch real telemetry (Week 1-2)
+
+  - id: task_b
+    suite: libero_10
+    name: "PUT_BOTH_MOKA_POTS_ON_THE_STOVE"                  # TODO: confirm exact task name string
+    instruction: "put both moka pots on the stove"
+    milestones: [pot1_grasped, pot1_on_stove, pot2_grasped, pot2_on_stove]
+
+seeds:
+  total_per_task: 30
+  held_out: {start: 0, end: 9}     # 10 episodes, inclusive -- the LLM never sees these (stage 8 only)
+  dev:      {start: 10, end: 29}   # 20 episodes -- stage 1 baseline, clustering, same-seed, regression
+
+policy:
+  name: pi05_libero
+  checkpoint: null        # fill in on the workstation: path/id of the openpi pi05_libero checkpoint
+  action_chunk: 10        # Pi0.5's native chunk size
+  exec_steps: 5           # steps executed per chunk before re-querying (PLAN.md §4 G4)
+  dtype: bfloat16
+
+llm:
+  provider: deepseek
+  model: deepseek-chat    # confirm the exact model id (and whether it accepts images) before a real campaign
+  supports_images: false  # flip to true once confirmed; diagnose.py stays text-first either way (PLAN.md Context)
+  max_propose_rounds: 5   # per cluster, stage 4 retries before evolve gives up
+
+runtime:
+  role1_mode: rule_based             # rule_based | llm ("llm" is a later experiment, not implemented)
+  max_recoveries_per_episode: 2
+  recovery_cooldown_steps: 30
+  recovery_step_budget: 80
+
+gates:
+  shadow_replay:
+    min_detect_rate: 0.8         # fires at/before divergence_step on >=80% of the cluster's failures
+    max_false_trigger_rate: 0.0  # and never on a successful trajectory
+  same_seed:
+    min_rescue_rate: 0.5         # >=50% of the cluster's failed seeds rescued live
+  regression:
+    allow_success_drop: 0        # dev successes must not decrease
+  held_out:
+    min_gain: 1                  # candidate must beat parent by >=1 episode on the 10 held-out seeds
+    mcnemar_alpha: 0.025         # reported alongside the gain, not enforced -- n=10 is too small to gate on (PLAN.md §3)
+
+infra:
+  backend: slurm   # slurm | local -- overridden by `--backend` on the CLI, this is just the default
+  ray:
+    gpu_job_cpus: 18      # matches slurm/gpu_job.sh's --cpus-per-task (2 of the account's 20-core cap left free)
+    max_batch: 16
+    batch_wait_ms: 10
+  slurm:
+    partition: UGGPU-TC1
+    qos: normal
+    conda_env: learning

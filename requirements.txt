@@ -1,0 +1,5 @@
+# Core deps -- needed everywhere. Nothing here needs a GPU.
+pyyaml>=6.0
+jsonschema>=4.0
+requests>=2.31
+pytest>=7.4

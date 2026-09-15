@@ -1,0 +1,58 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Critic-Recovery Bundle",
+  "description": "PLAN.md §3 stage 4 pass rule: valid against this schema, tools on the allowlist, parameters within bounds (bounds are enforced separately at execution time by runtime.tools.ToolSpec.clamp).",
+  "type": "object",
+  "required": ["id", "critic", "recovery", "reentry"],
+  "additionalProperties": false,
+  "properties": {
+    "id": { "type": "string", "pattern": "^[a-zA-Z0-9_.-]+$", "maxLength": 64 },
+    "critic": { "$ref": "#/definitions/rule" },
+    "recovery": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 12,
+      "items": { "$ref": "#/definitions/recovery_step" }
+    },
+    "reentry": { "$ref": "#/definitions/rule" }
+  },
+  "definitions": {
+    "predicate": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": [
+        { "type": "string" },
+        { "type": "string", "enum": ["==", "!=", "<", "<=", ">", ">="] },
+        {}
+      ]
+    },
+    "rule": {
+      "oneOf": [
+        { "$ref": "#/definitions/predicate" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "minProperties": 1,
+          "maxProperties": 1,
+          "properties": {
+            "all": { "type": "array", "minItems": 1, "items": { "$ref": "#/definitions/rule" } },
+            "any": { "type": "array", "minItems": 1, "items": { "$ref": "#/definitions/rule" } }
+          }
+        }
+      ]
+    },
+    "recovery_step": {
+      "type": "object",
+      "required": ["tool", "args"],
+      "additionalProperties": false,
+      "properties": {
+        "tool": {
+          "type": "string",
+          "enum": ["move_delta", "move_to_object", "set_gripper", "rotate_wrist", "lift", "retreat", "vla_chunk"]
+        },
+        "args": { "type": "object" }
+      }
+    }
+  }
+}
