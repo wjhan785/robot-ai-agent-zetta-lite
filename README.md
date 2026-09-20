@@ -49,7 +49,6 @@ a hand-crafted example that _is_ engineered to pass every gate).
 | `env/`, `policy/`            | LIBERO + Pi0.5 wrappers                                                        | `milestones.py`/`mock_policy.py` only — `libero_env.py`/`pi05_policy.py` need TC1 |
 | `infra/`                     | Ray env/policy workers + dynamic batcher (PLAN.md §4)                          | `batcher.py` only                                                                 |
 | `llm/`                       | DeepSeek client + `FakeLLMClient` for tests                                    | ✅                                                                                |
-| `slurm/`                     | `sbatch` templates                                                             | —                                                                                 |
 | `configs/manifest.yaml`      | The one frozen config for a campaign                                           | —                                                                                 |
 | `schemas/bundle.schema.json` | What a proposed bundle must look like                                          | —                                                                                 |
 | `skills/v0/`                 | The empty starting skill library                                               | —                                                                                 |
