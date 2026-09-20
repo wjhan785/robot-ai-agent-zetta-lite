@@ -5,14 +5,11 @@ A scaled-down, from-scratch reimplementation of the ideas in
 ([paper, arXiv:2608.16590](https://arxiv.org/abs/2608.16590)): a frozen VLA
 (Pi0.5) wrapped by small, LLM-written runtime critics and recovery
 programs, which only join a growing skill library after passing a series
-of offline and live gates. FYP learning project — see **[PLAN.md](PLAN.md)**
-for the full design, scope decisions, and rationale. This file is just a
-quickstart.
+of offline and live gates. 
 
 ## Local dev (this PC)
 
 ```bash
-conda activate learning
 pip install -r requirements.txt
 pytest -q
 ```
@@ -43,15 +40,6 @@ a hand-crafted example that _is_ engineered to pass every gate).
 
 ## On Remote Workstation
 
-```bash
-sbatch slurm/setup_env.sh                      # once
-sbatch --job-name=rollout slurm/gpu_job.sh rollout
-sbatch --job-name=evolve  slurm/gpu_job.sh evolve
-```
-
-See [PLAN.md §7](PLAN.md#7-remote-execution-via-slurm-tc1) for the QoS
-limits, cluster etiquette, and job templates.
-
 ## Layout
 
 | Path                         | What                                                                           | Testable here?                                                                    |
@@ -70,4 +58,4 @@ Known TODOs (flagged inline in the relevant file, not guessed at):
 `env/libero_env.py`'s `object_pose()`, exact LIBERO task-name strings in
 `configs/manifest.yaml`, and openpi server wiring in `policy/pi05_policy.py`
 — all need a real LIBERO/openpi install on TC1 to verify, not further
-guessing offline (PLAN.md §8 Weeks 1-2).
+guessing offline.
