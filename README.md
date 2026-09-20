@@ -5,7 +5,8 @@ A scaled-down, from-scratch reimplementation of the ideas in
 ([paper, arXiv:2608.16590](https://arxiv.org/abs/2608.16590)): a frozen VLA
 (Pi0.5) wrapped by small, LLM-written runtime critics and recovery
 programs, which only join a growing skill library after passing a series
-of offline and live gates. 
+of offline and live gates. This is for learning purposes only and not
+the actual FYP. 
 
 ## Local dev (this PC)
 
